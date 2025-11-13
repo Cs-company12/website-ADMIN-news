@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — C.S Company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="brand small">
+      <div class="logo">C.S</div>
+      <div>
+        <h1 class="site-title">C.S Company Admin</h1>
+      </div>
+    </div>
+    <div>
+      <button id="logoutBtn" class="btn ghost">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="card login-card">
+      <h3>Admin Login</h3>
+      <p class="muted">Username: <strong>Ciise</strong> — Password: <strong>Ciise123</strong></p>
+      <input id="adminUser" placeholder="Username">
+      <input id="adminPass" type="password" placeholder="Password">
+      <div class="row" style="margin-top:8px">
+        <button id="btnLogin" class="btn primary">Login</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="hidden">
+      <div class="admin-grid">
+        <aside class="side-menu card">
+          <nav>
+            <button class="side-btn" data-section="systems">Systems</button>
+            <button class="side-btn" data-section="news">News</button>
+            <button class="side-btn" data-section="videos">Videos</button>
+            <button class="side-btn" data-section="about">About</button>
+            <button class="side-btn" data-section="contact">Contact</button>
+            <button class="side-btn" data-section="data">Data</button>
+          </nav>
+        </aside>
+
+        <section class="admin-main card" id="adminSection"></section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="tiny muted">C.S Company — Admin Panel</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

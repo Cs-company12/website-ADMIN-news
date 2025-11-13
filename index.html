@@ -50,7 +50,7 @@ form input, form textarea, form button { display:block; width:100%; margin:5px 0
 
   <section id="about">
     <h2>About Us</h2>
-    <p id="aboutText">C.S Company specializes in hospital, pharmacy, supermarket, and other management systems.</p>
+    <p id="aboutText">C.S Company provides professional software solutions for hospitals, pharmacies, supermarkets, and businesses.</p>
   </section>
 
   <section id="contact">
@@ -75,7 +75,7 @@ form input, form textarea, form button { display:block; width:100%; margin:5px 0
     </div>
     <div id="dashboard" class="hidden admin-panel">
       <h3>Dashboard</h3>
-      <textarea id="aboutInput" rows="3">C.S Company specializes in hospital, pharmacy, supermarket, and other management systems.</textarea>
+      <textarea id="aboutInput" rows="3">C.S Company provides professional software solutions for hospitals, pharmacies, supermarkets, and businesses.</textarea>
       <button id="saveAbout">Save About Text</button>
       
       <div>
@@ -92,7 +92,7 @@ form input, form textarea, form button { display:block; width:100%; margin:5px 0
       
       <div>
         <h4>Add Video</h4>
-        <input type="text" id="videoInput" placeholder="Video Link/Title">
+        <input type="text" id="videoInput" placeholder="Video Title or URL">
         <button id="addVideo">Add</button>
       </div>
       
@@ -123,7 +123,18 @@ function renderNews(){
 }
 function renderVideos(){ 
   let g = document.getElementById("videosGrid"); g.innerHTML=""; 
-  videos.forEach(v=>{let d=document.createElement("div");d.className="card";d.innerText=v; g.appendChild(d);});
+  videos.forEach(v=>{
+    let d=document.createElement("div");
+    d.className="card";
+    // Simple embed if it's a URL (YouTube)
+    if(v.includes("http")){ 
+      let iframe = document.createElement("iframe");
+      iframe.src = v;
+      iframe.width="200"; iframe.height="150"; iframe.frameBorder="0"; iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen=true;
+      d.appendChild(iframe);
+    } else { d.innerText=v; }
+    g.appendChild(d);
+  });
 }
 function renderAbout(){ document.getElementById("aboutText").innerText=about; }
 
@@ -131,18 +142,15 @@ function renderAbout(){ document.getElementById("aboutText").innerText=about; }
 renderSystems(); renderNews(); renderVideos(); renderAbout();
 
 // Admin login functionality
-function showAdmin() {
-  let adminSection = document.getElementById("adminSection");
-  adminSection.classList.remove("hidden");
-}
-function hideAdmin() {
-  let adminSection = document.getElementById("adminSection");
-  adminSection.classList.add("hidden");
-}
-hideAdmin(); // hide by default
+const adminSection = document.getElementById("adminSection");
+const loginDiv = document.getElementById("loginDiv");
+const dashboard = document.getElementById("dashboard");
 
-const loginDiv=document.getElementById("loginDiv");
-const dashboard=document.getElementById("dashboard");
+function hideAdmin() { adminSection.classList.add("hidden"); }
+function showAdmin() { adminSection.classList.remove("hidden"); }
+
+hideAdmin(); // hide admin by default
+
 document.getElementById("btnLogin").onclick=function(){
   if(document.getElementById("adminUser").value==="Ciise" && document.getElementById("adminPass").value==="Ciise123"){
     loginDiv.classList.add("hidden");
@@ -150,6 +158,7 @@ document.getElementById("btnLogin").onclick=function(){
     showAdmin();
   } else { alert("Wrong credentials"); hideAdmin(); }
 };
+
 document.getElementById("logoutBtn").onclick=function(){
   loginDiv.classList.remove("hidden");
   dashboard.classList.add("hidden");
@@ -158,16 +167,23 @@ document.getElementById("logoutBtn").onclick=function(){
 
 // Admin actions
 document.getElementById("addSystem").onclick=function(){
-  let val=document.getElementById("systemInput").value; if(val){systems.push(val); localStorage.setItem("systems",JSON.stringify(systems)); renderSystems(); document.getElementById("systemInput").value=""; }
+  let val=document.getElementById("systemInput").value; 
+  if(val){ systems.push(val); localStorage.setItem("systems",JSON.stringify(systems)); renderSystems(); document.getElementById("systemInput").value=""; }
 };
+
 document.getElementById("addNews").onclick=function(){
-  let val=document.getElementById("newsInput").value; if(val){news.push(val); localStorage.setItem("news",JSON.stringify(news)); renderNews(); document.getElementById("newsInput").value=""; }
+  let val=document.getElementById("newsInput").value; 
+  if(val){ news.push(val); localStorage.setItem("news",JSON.stringify(news)); renderNews(); document.getElementById("newsInput").value=""; }
 };
+
 document.getElementById("addVideo").onclick=function(){
-  let val=document.getElementById("videoInput").value; if(val){videos.push(val); localStorage.setItem("videos",JSON.stringify(videos)); renderVideos(); document.getElementById("videoInput").value=""; }
+  let val=document.getElementById("videoInput").value; 
+  if(val){ videos.push(val); localStorage.setItem("videos",JSON.stringify(videos)); renderVideos(); document.getElementById("videoInput").value=""; }
 };
+
 document.getElementById("saveAbout").onclick=function(){
-  about=document.getElementById("aboutInput").value; localStorage.setItem("about",about); renderAbout();
+  about=document.getElementById("aboutInput").value; 
+  localStorage.setItem("about",about); renderAbout();
 };
 </script>
 

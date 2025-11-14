@@ -1,329 +1,261 @@
-<!-- Save as admin-all-in-one.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>C.S Company — Admin</title>
+<meta charset="UTF-8">
+<title>C.S COMPANY — Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-  /* Minimal, clean admin style (white + black text) */
-  :root{--bg:#fff;--text:#000;--muted:#666;--card:#fafafa;--border:#ddd;--maxw:1000px}
-  *{box-sizing:border-box}
-  body{font-family:Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:var(--text)}
-  .wrap{max-width:var(--maxw);margin:20px auto;padding:16px}
-  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  h1{margin:0;font-size:20px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px}
-  .muted{color:var(--muted);font-size:13px}
-  input,textarea,select,button{font-family:inherit}
-  input,textarea,select{width:100%;padding:8px;margin-top:8px;border:1px solid var(--border);border-radius:6px}
-  textarea{min-height:90px;resize:vertical}
-  .row{display:flex;gap:8px}
-  .col{flex:1}
-  .btn{padding:8px 10px;border-radius:6px;border:0;cursor:pointer}
-  .btn.primary{background:#000;color:#fff}
-  .btn.ghost{background:transparent;border:1px solid var(--border)}
-  .list{margin-top:10px}
-  .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px dashed #eee}
-  .small{font-size:13px;color:var(--muted)}
-  .topbar{display:flex;gap:8px;align-items:center}
-  .hidden{display:none}
-  .controls{display:flex;gap:6px}
-  .import-file{display:none}
-  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
-  @media(max-width:700px){ .row{flex-direction:column}}
+/* ------------------ GLOBAL STYLE ------------------ */
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#eef3f2;
+  color:#111;
+}
+
+/* LOGIN BOX */
+.login-box{
+  max-width:350px;
+  margin:80px auto;
+  padding:25px;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+.login-box h2{
+  margin-bottom:15px;
+  text-align:center;
+}
+.input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+.btn{
+  width:100%;
+  padding:10px;
+  margin-top:15px;
+  background:#0fa584;
+  color:white;
+  font-weight:bold;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+.btn:hover{background:#0b7a5e}
+
+/* ------------------ ADMIN PANEL ------------------ */
+#adminPanel{
+  display:none;
+  padding:15px;
+}
+
+.topbar{
+  background:#0fa584;
+  color:white;
+  padding:15px;
+  font-size:20px;
+  font-weight:bold;
+  text-align:center;
+  border-radius:0 0 10px 10px;
+}
+
+.section{
+  margin-top:20px;
+  padding:15px;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.07);
+}
+
+.section h3{
+  margin:0 0 10px 0;
+  padding-bottom:8px;
+  border-bottom:1px solid #eee;
+}
+
+textarea, input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  margin-top:10px;
+}
+
+.save-btn{
+  margin-top:10px;
+  background:#0fa584;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.save-btn:hover{background:#0b7a5e}
+
+/* LIST STYLING */
+.item{
+  padding:10px;
+  background:#f5f9f8;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin:8px 0;
+}
+.delete{
+  float:right;
+  background:#e74c3c;
+  color:white;
+  border:none;
+  padding:5px 10px;
+  border-radius:4px;
+  cursor:pointer;
+}
+.delete:hover{background:#c0392b}
 </style>
+
 </head>
+
 <body>
-  <div class="wrap">
-    <header>
-      <h1>C.S Company — Admin</h1>
-      <div class="topbar">
-        <div class="small">Secure admin (local demo)</div>
-      </div>
-    </header>
 
-    <!-- LOGIN -->
-    <div id="loginCard" class="card">
-      <h3>Admin Login</h3>
-      <div class="small">Username: <strong>admin</strong> — Password: <strong>Hooyo@</strong></div>
-      <input id="inUser" placeholder="Username" autocomplete="username">
-      <input id="inPass" placeholder="Password" type="password" autocomplete="current-password">
-      <div class="row" style="margin-top:8px">
-        <button id="btnLogin" class="btn primary">Login</button>
-        <button id="btnClear" class="btn ghost">Clear</button>
-      </div>
-      <div id="loginMsg" class="small muted" style="margin-top:8px"></div>
-    </div>
+<!-- ------------------ LOGIN SCREEN ------------------ -->
+<div id="loginScreen" class="login-box">
+  <h2>Admin Login</h2>
 
-    <!-- DASHBOARD -->
-    <div id="dash" class="hidden">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Dashboard</strong>
-          <div>
-            <button id="btnExport" class="btn ghost">Export JSON</button>
-            <button id="btnImportOpen" class="btn ghost">Import JSON</button>
-            <input id="importFile" class="import-file" type="file" accept="application/json">
-            <button id="btnLogout" class="btn ghost">Logout</button>
-          </div>
-        </div>
-        <div class="small" style="margin-top:8px">All changes saved to your browser (localStorage). Use Export to backup.</div>
-      </div>
+  <input type="text" id="username" class="input" placeholder="Username">
+  <input type="password" id="password" class="input" placeholder="Password">
 
-      <!-- About -->
-      <div class="card">
-        <strong>Edit About</strong>
-        <textarea id="aboutInput"></textarea>
-        <div style="margin-top:8px" class="row">
-          <button id="saveAbout" class="btn primary">Save About</button>
-          <button id="resetAbout" class="btn ghost">Reset Default</button>
-        </div>
-      </div>
+  <button class="btn" onclick="login()">Login</button>
+</div>
 
-      <!-- Systems -->
-      <div class="card">
-        <strong>Systems (Hospital / Pharmacy / Supermarket / etc.)</strong>
-        <div class="row" style="margin-top:8px">
-          <input id="sysTitle" placeholder="System title (e.g. Hospital System)">
-          <button id="addSys" class="btn primary">Add</button>
-        </div>
-        <div id="sysList" class="list"></div>
-      </div>
+<!-- ------------------ ADMIN PANEL ------------------ -->
+<div id="adminPanel">
 
-      <!-- News -->
-      <div class="card">
-        <strong>News</strong>
-        <input id="newsTitle" placeholder="News headline">
-        <textarea id="newsExcerpt" placeholder="Short excerpt"></textarea>
-        <div class="row" style="margin-top:8px">
-          <input id="newsDate" type="date" class="col">
-          <button id="addNews" class="btn primary">Add News</button>
-        </div>
-        <div id="newsList" class="list"></div>
-      </div>
+  <div class="topbar">C.S COMPANY — Admin Panel</div>
 
-      <!-- Videos -->
-      <div class="card">
-        <strong>Videos (YouTube URL or direct URL)</strong>
-        <input id="videoTitle" placeholder="Video title">
-        <input id="videoUrl" placeholder="Video URL (https://...)">
-        <div class="row" style="margin-top:8px">
-          <button id="addVideo" class="btn primary">Add Video</button>
-          <button id="addLocalVideo" class="btn ghost">Upload Local MP4 (preview only)</button>
-          <input id="localVideoFile" type="file" accept="video/*" class="import-file">
-        </div>
-        <div id="videoList" class="list"></div>
-      </div>
-
-      <!-- Contact -->
-      <div class="card">
-        <strong>Contact Info</strong>
-        <input id="contactPhones" placeholder="Phones (comma separated) e.g. 0610848799,0613195342">
-        <input id="contactEmail" placeholder="Email">
-        <input id="contactLocation" placeholder="Location">
-        <div style="margin-top:8px" class="row">
-          <button id="saveContact" class="btn primary">Save Contact</button>
-        </div>
-      </div>
-
-    </div>
-
-    <footer>© C.S Company — Admin (local demo)</footer>
+  <!-- NEWS -->
+  <div class="section">
+    <h3>News</h3>
+    <textarea id="newsInput" placeholder="Write news..."></textarea>
+    <button class="save-btn" onclick="addNews()">Add News</button>
+    <div id="newsList"></div>
   </div>
 
+  <!-- VIDEOS -->
+  <div class="section">
+    <h3>Videos (YouTube Link)</h3>
+    <input id="videoLink" placeholder="Paste video link">
+    <button class="save-btn" onclick="addVideo()">Add Video</button>
+    <div id="videoList"></div>
+  </div>
+
+  <!-- SYSTEMS -->
+  <div class="section">
+    <h3>Systems</h3>
+    <input id="systemName" placeholder="System Name">
+    <textarea id="systemDesc" placeholder="System Description"></textarea>
+    <button class="save-btn" onclick="addSystem()">Add System</button>
+    <div id="systemList"></div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section">
+    <h3>Contact</h3>
+    <textarea id="contactInfo" placeholder="Phone, Email, WhatsApp..."></textarea>
+    <button class="save-btn" onclick="saveContact()">Save Contact</button>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section">
+    <h3>About Us</h3>
+    <textarea id="aboutInfo" placeholder="About company..."></textarea>
+    <button class="save-btn" onclick="saveAbout()">Save About</button>
+  </div>
+
+</div>
+
+<!-- ------------------ JAVASCRIPT ------------------ -->
 <script>
-/* ===== Admin single-file script =====
-   - Credentials: username "admin", password "Hooyo@"
-   - Data saved under localStorage key "cs_admin_data_v1"
-*/
-(function(){
-  const KEY = 'cs_admin_data_v1';
-  const CRED = {user:'admin', pass:'Hooyo@'};
 
-  const loginCard = document.getElementById('loginCard');
-  const dash = document.getElementById('dash');
-  const inUser = document.getElementById('inUser');
-  const inPass = document.getElementById('inPass');
-  const loginMsg = document.getElementById('loginMsg');
+function login(){
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
 
-  // elements
-  const aboutInput = document.getElementById('aboutInput');
-  const btnSaveAbout = document.getElementById('saveAbout');
-  const btnResetAbout = document.getElementById('resetAbout');
-
-  const sysTitle = document.getElementById('sysTitle');
-  const addSys = document.getElementById('addSys');
-  const sysList = document.getElementById('sysList');
-
-  const newsTitle = document.getElementById('newsTitle');
-  const newsExcerpt = document.getElementById('newsExcerpt');
-  const newsDate = document.getElementById('newsDate');
-  const addNewsBtn = document.getElementById('addNews');
-  const newsList = document.getElementById('newsList');
-
-  const videoTitle = document.getElementById('videoTitle');
-  const videoUrl = document.getElementById('videoUrl');
-  const addVideoBtn = document.getElementById('addVideo');
-  const videoList = document.getElementById('videoList');
-  const addLocalVideoBtn = document.getElementById('addLocalVideo');
-  const localVideoFile = document.getElementById('localVideoFile');
-
-  const contactPhones = document.getElementById('contactPhones');
-  const contactEmail = document.getElementById('contactEmail');
-  const contactLocation = document.getElementById('contactLocation');
-  const saveContact = document.getElementById('saveContact');
-
-  const btnExport = document.getElementById('btnExport');
-  const btnImportOpen = document.getElementById('btnImportOpen');
-  const importFile = document.getElementById('importFile');
-
-  const btnLogout = document.getElementById('btnLogout');
-
-  // default data
-  const DEFAULT = {
-    about: "C.S Company provides professional software solutions for hospitals, pharmacies, supermarkets, and businesses.",
-    contact: {phones:["0610848799","0613195342"], email:"info@cscompany.com", location:"Mogadishu, Somalia"},
-    systems: [],
-    news: [],
-    videos: [], // {id,title,url,local:false}
-    lastSaved: null
-  };
-
-  // load/save
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      if(!raw){ localStorage.setItem(KEY, JSON.stringify(DEFAULT)); return JSON.parse(JSON.stringify(DEFAULT)); }
-      return JSON.parse(raw);
-    }catch(e){ console.error(e); localStorage.setItem(KEY, JSON.stringify(DEFAULT)); return JSON.parse(JSON.stringify(DEFAULT)); }
+  if(u === "admin" && p === "Hooyo@"){
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+  } else {
+    alert("Incorrect username or password!");
   }
-  function save(data){
-    data.lastSaved = new Date().toISOString();
-    localStorage.setItem(KEY, JSON.stringify(data));
-    renderAll();
-  }
+}
 
-  let DATA = load();
+/* ---- Save and Load Data from Local Storage ---- */
 
-  // ===== render =====
-  function renderAll(){
-    // about
-    aboutInput.value = DATA.about || '';
-    // systems
-    sysList.innerHTML = '';
-    DATA.systems.forEach((s, i)=>{
-      const div = document.createElement('div'); div.className='list-item';
-      const left = document.createElement('div'); left.innerHTML = `<strong>${escapeHtml(s)}</strong>`;
-      const controls = document.createElement('div'); controls.className='controls';
-      const btnE = document.createElement('button'); btnE.className='btn ghost'; btnE.textContent='Edit'; btnE.onclick = ()=> { sysTitle.value = s; DATA.systems.splice(i,1); save(DATA); }
-      const btnD = document.createElement('button'); btnD.className='btn'; btnD.textContent='Delete'; btnD.onclick = ()=> { if(confirm('Delete system?')){ DATA.systems.splice(i,1); save(DATA); } }
-      controls.appendChild(btnE); controls.appendChild(btnD);
-      div.appendChild(left); div.appendChild(controls); sysList.appendChild(div);
-    });
-    // news
-    newsList.innerHTML = '';
-    DATA.news.forEach((n,i)=>{
-      const div = document.createElement('div'); div.className='list-item';
-      div.innerHTML = `<div><strong>${escapeHtml(n.title)}</strong><div class="small">${n.date}</div><div class="muted">${escapeHtml(n.excerpt)}</div></div>`;
-      const c = document.createElement('div'); c.className='controls';
-      const be = document.createElement('button'); be.className='btn ghost'; be.textContent='Edit'; be.onclick = ()=> { newsTitle.value=n.title; newsExcerpt.value=n.excerpt; newsDate.value=n.date; DATA.news.splice(i,1); save(DATA); };
-      const bd = document.createElement('button'); bd.className='btn'; bd.textContent='Delete'; bd.onclick=()=>{ if(confirm('Delete news?')){ DATA.news.splice(i,1); save(DATA);} };
-      c.appendChild(be); c.appendChild(bd); div.appendChild(c); newsList.appendChild(div);
-    });
-    // videos
-    videoList.innerHTML = '';
-    DATA.videos.forEach((v,i)=>{
-      const div = document.createElement('div'); div.className='list-item';
-      const left = document.createElement('div'); left.innerHTML = `<strong>${escapeHtml(v.title)}</strong><div class="small">${v.local? 'Local file' : (v.url||'')}</div>`;
-      const controls = document.createElement('div'); controls.className='controls';
-      const be = document.createElement('button'); be.className='btn ghost'; be.textContent='Edit'; be.onclick = ()=> { videoTitle.value=v.title; videoUrl.value=v.url||''; DATA.videos.splice(i,1); save(DATA); };
-      const bd = document.createElement('button'); bd.className='btn'; bd.textContent='Delete'; bd.onclick=()=>{ if(confirm('Delete video?')){ DATA.videos.splice(i,1); save(DATA);} };
-      controls.appendChild(be); controls.appendChild(bd);
-      div.appendChild(left); div.appendChild(controls); videoList.appendChild(div);
-    });
-    // contact
-    contactPhones.value = (DATA.contact.phones||[]).join(',');
-    contactEmail.value = DATA.contact.email||'';
-    contactLocation.value = DATA.contact.location||'';
-  }
+function load(){
+  showList("news");
+  showList("videos");
+  showList("systems");
 
-  function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  document.getElementById("contactInfo").value = localStorage.getItem("contact") || "";
+  document.getElementById("aboutInfo").value = localStorage.getItem("about") || "";
+}
+load();
 
-  // initial render
-  renderAll();
+function addNews(){
+  saveToList("news", document.getElementById("newsInput").value);
+  document.getElementById("newsInput").value="";
+}
 
-  // ===== login =====
-  document.getElementById('btnLogin').addEventListener('click', ()=>{
-    const u = inUser.value.trim();
-    const p = inPass.value;
-    if(u === CRED.user && p === CRED.pass){
-      loginCard.classList.add('hidden');
-      dash.classList.remove('hidden');
-      renderAll();
-      inUser.value=''; inPass.value='';
-      loginMsg.textContent = '';
-    } else {
-      loginMsg.textContent = 'Invalid credentials';
-      loginMsg.style.color = 'crimson';
-    }
+function addVideo(){
+  saveToList("videos", document.getElementById("videoLink").value);
+  document.getElementById("videoLink").value="";
+}
+
+function addSystem(){
+  const name = document.getElementById("systemName").value;
+  const desc = document.getElementById("systemDesc").value;
+  saveToList("systems", name+" — "+desc);
+  document.getElementById("systemName").value="";
+  document.getElementById("systemDesc").value="";
+}
+
+function saveContact(){
+  localStorage.setItem("contact", document.getElementById("contactInfo").value);
+  alert("Contact Saved!");
+}
+
+function saveAbout(){
+  localStorage.setItem("about", document.getElementById("aboutInfo").value);
+  alert("About Saved!");
+}
+
+function saveToList(key, value){
+  if(!value.trim()) return;
+  let arr = JSON.parse(localStorage.getItem(key) || "[]");
+  arr.push(value);
+  localStorage.setItem(key, JSON.stringify(arr));
+  showList(key);
+}
+
+function showList(key){
+  let arr = JSON.parse(localStorage.getItem(key) || "[]");
+  let html = "";
+  arr.forEach((x,i)=>{
+    html += `<div class="item">${x}<button class="delete" onclick="del('${key}',${i})">Delete</button></div>`;
   });
-  document.getElementById('btnClear').addEventListener('click', ()=>{ inUser.value=''; inPass.value=''; loginMsg.textContent=''; });
+  document.getElementById(key+"List").innerHTML = html;
+}
 
-  // ===== about =====
-  btnSaveAbout.addEventListener('click', ()=>{ DATA.about = aboutInput.value.trim(); save(DATA); alert('About saved'); });
-  btnResetAbout.addEventListener('click', ()=>{ if(confirm('Reset about text to default?')){ DATA.about = DEFAULT.about; save(DATA); } });
+function del(key,i){
+  let arr = JSON.parse(localStorage.getItem(key) || "[]");
+  arr.splice(i,1);
+  localStorage.setItem(key, JSON.stringify(arr));
+  showList(key);
+}
 
-  // ===== systems =====
-  addSys.addEventListener('click', ()=>{ const t = sysTitle.value.trim(); if(!t){ alert('Enter title'); return;} DATA.systems.push(t); sysTitle.value=''; save(DATA); });
-
-  // ===== news =====
-  addNewsBtn.addEventListener('click', ()=>{ const t = newsTitle.value.trim(); const e = newsExcerpt.value.trim(); const d = newsDate.value || (new Date()).toISOString().slice(0,10); if(!t){ alert('Enter news title'); return;} DATA.news.unshift({id:Date.now().toString(36), title:t, excerpt:e, date:d}); newsTitle.value=''; newsExcerpt.value=''; newsDate.value=''; save(DATA); });
-
-  // ===== videos =====
-  addVideoBtn.addEventListener('click', ()=>{ const t = videoTitle.value.trim(); const u = videoUrl.value.trim(); if(!t){ alert('Enter video title'); return;} DATA.videos.push({id:Date.now().toString(36), title:t, url:u||'', local:false}); videoTitle.value=''; videoUrl.value=''; save(DATA); });
-
-  // local video upload (preview & store as blob URL in memory only)
-  addLocalVideoBtn.addEventListener('click', ()=>{ localVideoFile.click(); });
-  localVideoFile.addEventListener('change', (e)=>{
-    const f = e.target.files[0]; if(!f) return;
-    const url = URL.createObjectURL(f); // preview works in this session
-    const title = f.name;
-    // warn: blob URLs won't persist across reloads; we store only temporary reference
-    DATA.videos.push({id:Date.now().toString(36), title:title, url:url, local:true});
-    save(DATA);
-    alert('Local video added (preview only in this browser session). For permanent hosting use a server URL.');
-    localVideoFile.value='';
-  });
-
-  // ===== contact =====
-  saveContact.addEventListener('click', ()=>{ const phones = contactPhones.value.split(',').map(s=>s.trim()).filter(Boolean); DATA.contact.phones = phones; DATA.contact.email = contactEmail.value.trim(); DATA.contact.location = contactLocation.value.trim(); save(DATA); alert('Contact saved'); });
-
-  // ===== export/import =====
-  btnExport.addEventListener('click', ()=>{ const blob = new Blob([JSON.stringify(DATA,null,2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'cs_admin_data.json'; a.click(); URL.revokeObjectURL(a.href); });
-  btnImportOpen.addEventListener('click', ()=>{ importFile.click(); });
-  importFile.addEventListener('change', (e)=>{
-    const f = e.target.files[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = ()=> {
-      try{
-        const parsed = JSON.parse(r.result);
-        if(confirm('Import will overwrite current data. Continue?')){
-          DATA = parsed;
-          save(DATA);
-          alert('Imported');
-        }
-      }catch(err){ alert('Invalid JSON file'); }
-    };
-    r.readAsText(f);
-  });
-
-  // ===== logout =====
-  btnLogout.addEventListener('click', ()=>{ if(confirm('Logout?')){ dash.classList.add('hidden'); loginCard.classList.remove('hidden'); } });
-
-  // expose save function for debug (not necessary)
-  window.cs_admin_save = save;
-})();
 </script>
+
 </body>
 </html>
